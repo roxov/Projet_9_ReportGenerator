@@ -1,6 +1,7 @@
 package fr.asterox.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,6 +20,7 @@ import fr.asterox.ReportGenerator.bean.PatientDTO;
 import fr.asterox.ReportGenerator.proxy.NotesCentralProxy;
 import fr.asterox.ReportGenerator.proxy.PatientManagementProxy;
 import fr.asterox.ReportGenerator.service.ReportService;
+import fr.asterox.ReportGenerator.util.NoPatientException;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportServiceTest {
@@ -46,12 +48,14 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestNone", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.M);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L)).thenReturn("Hémoglobine A1C, Microalbumine");
 		// WHEN
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestNone (age 30) diabetes assessment is: None", result);
@@ -63,12 +67,15 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestInDanger", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.M);
+
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L)).thenReturn("Hémoglobine A1C, Microalbumine, Taille, Poids");
 		// WHEN
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestInDanger (age 30) diabetes assessment is: InDanger", result);
@@ -80,6 +87,7 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestEarlyOnset", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.M);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L))
 				.thenReturn("Hémoglobine A1C, Microalbumine, Taille, Poids, Fumeur");
@@ -87,6 +95,7 @@ public class ReportServiceTest {
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestEarlyOnset (age 30) diabetes assessment is: EarlyOnset", result);
@@ -98,12 +107,14 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestNone", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.F);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L)).thenReturn("Hémoglobine A1C, Microalbumine, Taille");
 		// WHEN
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestNone (age 30) diabetes assessment is: None", result);
@@ -115,6 +126,7 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestInDanger", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.F);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L))
 				.thenReturn("Hémoglobine A1C, Microalbumine, Taille, Poids, Fumeur, Anormal");
@@ -122,6 +134,7 @@ public class ReportServiceTest {
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestInDanger (age 30) diabetes assessment is: InDanger", result);
@@ -133,6 +146,7 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestEarlyOnset", ft.parse("1990, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.F);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L))
 				.thenReturn("Hémoglobine A1C, Microalbumine, Taille, Poids, Fumeur, Anormal, Cholestérol");
@@ -140,6 +154,7 @@ public class ReportServiceTest {
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestEarlyOnset (age 30) diabetes assessment is: EarlyOnset", result);
@@ -151,12 +166,14 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestNone", ft.parse("1989, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.F);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L)).thenReturn("Microalbumine");
 		// WHEN
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestNone (age 31) diabetes assessment is: None", result);
@@ -168,12 +185,14 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "Borderline", ft.parse("1989, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.F);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L)).thenReturn("Hémoglobine A1C, Microalbumine");
 		// WHEN
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test Borderline (age 31) diabetes assessment is: Borderline", result);
@@ -185,6 +204,7 @@ public class ReportServiceTest {
 		// GIVEN
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestInDanger", ft.parse("1989, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.M);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L))
 				.thenReturn("Hémoglobine A1C, Microalbumine, Taille, Poids, Anticorps, Poids");
@@ -192,6 +212,7 @@ public class ReportServiceTest {
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestInDanger (age 31) diabetes assessment is: InDanger", result);
@@ -204,6 +225,7 @@ public class ReportServiceTest {
 
 		PatientDTO patient = new PatientDTO(1L, "Test", "TestEarlyOnset", ft.parse("1989, 12, 31"), "1 Brookside St",
 				"100-222-3333", PatientDTO.Sex.M);
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(true);
 		when(patientManagementProxy.getPatientById(1L)).thenReturn(patient);
 		when(notesCentralProxy.getPatientStringNotes(1L))
 				.thenReturn("Taille, Poids, FUMEUR, anormal, Cholésterol, Vertige, Rechute, Réaction");
@@ -211,9 +233,25 @@ public class ReportServiceTest {
 		String result = reportService.getRestReport(1L);
 
 		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
 		verify(patientManagementProxy, Mockito.times(1)).getPatientById(1L);
 		verify(notesCentralProxy, Mockito.times(1)).getPatientStringNotes(1L);
 		assertEquals("Patient : Test TestEarlyOnset (age 31) diabetes assessment is: EarlyOnset", result);
+	}
+
+	@Test
+	public void givenNonexistentPatient_whenGetRestReport_thenThrowNoPatientException() {
+		// GIVEN
+		when(patientManagementProxy.askExistenceOfPatient(1L)).thenReturn(false);
+
+		// WHEN
+		Exception exception = assertThrows(NoPatientException.class, () -> {
+			reportService.getRestReport(1L);
+		});
+
+		// THEN
+		verify(patientManagementProxy, Mockito.times(1)).askExistenceOfPatient(1L);
+		assertEquals(exception.getMessage(), "This patient does not exist.");
 	}
 
 }

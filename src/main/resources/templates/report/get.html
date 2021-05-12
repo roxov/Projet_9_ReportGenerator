@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Home</title>
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+	<div class="row">
+		<a href="/patient/list">Patients list</a>&nbsp;|&nbsp;
+	</div>
+	
+	<div class="row"><h2>Diabetes report</h2></div>
+	<div class="row">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Given Name</th>
+					<th>Family Name</th>
+					<th>Birthdate</th>
+					<th>Address</th>
+					<th>Phone</th>
+					<th>Sex</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:object="${report}">
+					<td style="width: 10%" th:text="*{patient.patientId}"></td>
+					<td th:text="*{patient.givenName}"></td>
+					<td th:text="*{patient.familyName}"></td>
+					<td th:text="*{patient.birthdate}"></td>
+					<td th:text="*{patient.address}"></td>
+					<td th:text="*{patient.phone}"></td>
+					<td style="width: 10%" th:text="*{patient.sex}"></td>					
+				</tr>
+			</tbody>
+		</table>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Danger Level</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:object="${report}">
+					<td style="width: 100%" th:text="*{dangerLevel}"></td>					
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

@@ -11,7 +11,10 @@ import fr.asterox.ReportGenerator.bean.PatientDTO;
 @FeignClient(name = "PatientManagement", url = "localhost:8081")
 public interface PatientManagementProxy {
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/rest/patient/{id}")
 	public PatientDTO getPatientById(@PathVariable("id") @NotNull(message = "patientId is compulsory") Long patientId);
 
+	@GetMapping(value = "rest/patient/exist/{id}")
+	public boolean askExistenceOfPatient(
+			@PathVariable("id") @NotNull(message = "patientId is compulsory") Long patientId);
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.asterox.ReportGenerator.service.ReportService;
 
 @RestController
-@RequestMapping("rest/patient")
+@RequestMapping("rest/assess")
 public class ReportRestController {
 
 	private static final Logger LOGGER = LogManager.getLogger(ReportRestController.class);
@@ -22,7 +22,8 @@ public class ReportRestController {
 	private ReportService reportService;
 
 	@GetMapping(value = "/{id}")
-	public String getPatientReport(@PathVariable("id") @NotNull(message = "patientId is compulsory") Long patientId) {
+	public String getPatientAssessment(
+			@PathVariable("id") @NotNull(message = "patientId is compulsory") Long patientId) {
 		LOGGER.info("Getting diabetes report for patient identified by id : " + patientId);
 		return reportService.getRestReport(patientId);
 	}

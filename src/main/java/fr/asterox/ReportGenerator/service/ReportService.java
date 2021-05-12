@@ -20,6 +20,7 @@ import fr.asterox.ReportGenerator.bean.PatientDTO.Sex;
 import fr.asterox.ReportGenerator.constant.MedicalTerminology;
 import fr.asterox.ReportGenerator.proxy.NotesCentralProxy;
 import fr.asterox.ReportGenerator.proxy.PatientManagementProxy;
+import fr.asterox.ReportGenerator.util.NoPatientException;
 
 @Service
 public class ReportService implements IReportService {
@@ -33,6 +34,10 @@ public class ReportService implements IReportService {
 
 	@Override
 	public String getRestReport(Long patientId) {
+		if (!patientManagementProxy.askExistenceOfPatient(patientId)) {
+			LOGGER.info("The requested patient does not exist.");
+			throw new NoPatientException("This patient does not exist.");
+		}
 		PatientDTO patient = patientManagementProxy.getPatientById(patientId);
 
 		return "Patient : " + patient.getGivenName() + " " + patient.getFamilyName() + " (age "
@@ -41,9 +46,13 @@ public class ReportService implements IReportService {
 	}
 
 	@Override
-	public void getDiabetesReport(Long patientId) {
+	public DiabetesReport getDiabetesReport(Long patientId) {
+		if (!patientManagementProxy.askExistenceOfPatient(patientId)) {
+			LOGGER.info("The requested patient does not exist.");
+			throw new NoPatientException("This patient does not exist.");
+		}
 		PatientDTO patient = patientManagementProxy.getPatientById(patientId);
-		new DiabetesReport(patient, this.calculateDangerLevel(patient));
+		return new DiabetesReport(patient, this.calculateDangerLevel(patient));
 	}
 
 	private int getAge(Date birthdate) {

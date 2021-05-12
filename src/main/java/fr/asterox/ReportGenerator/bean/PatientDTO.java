@@ -9,10 +9,7 @@ import javax.persistence.Enumerated;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
-import lombok.RequiredArgsConstructor;
-
 @Entity
-@RequiredArgsConstructor
 public class PatientDTO {
 
 	@NonNull
