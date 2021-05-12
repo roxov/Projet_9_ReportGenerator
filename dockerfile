@@ -1,4 +1,4 @@
 FROM openjdk:8
-EXPOSE 8080
+EXPOSE 8083
 CMD ["java", "ReportGenerator"]
 
